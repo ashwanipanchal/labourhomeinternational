@@ -15,33 +15,37 @@ import {
   ImageBackground,
   FlatList,
 } from 'react-native';
-import {Api} from '../services/Api';
+import {Api, LocalStorage} from '../services/Api';
 import {StatusBarLight} from '../Custom/CustomStatusBar';
-import {Header, HeaderDark, MainView} from '../Custom/CustomView';
+import {DisableButton, Header, HeaderDark, MainView} from '../Custom/CustomView';
 import {BottomView, EndButton, HeaderLight} from '../Custom/CustomView';
+import JobList from '../Custom/JobList';
 const {height} = Dimensions.get('window');
 
 const Reschedule = ({navigation}) => {
-  const [rescheduleData, setRescheduleData] = useState([])
-  const [data, setData] = useState([
-    {
-      id: '1',
-      title: 'Ram Construction',
-      subTitle: 'Washington, United States',
-      source: require('../images/Reruiting-agent-slice/images.png'),
-    },
-  ]);
+  const [state, setState] = useState({
+    isLoading: false
+  })
+  const [data, setData] = useState([]);
 
+  const toggleLoader = isLoading => setState({ ...state, isLoading })
   useEffect(()=>{
     getProfile()
   },[]);
 
   const getProfile = async ()=>{
-    const response = await Api.getUserHome()
-    const {status} = response;
+    toggleLoader(true)
+    const type = (await LocalStorage.getUserDetail()) || '{}';
+    const user = JSON.parse(type)
+    const body = {
+      "user_id" : user.id
+    }
+    const response = await Api.rescheduleListUser(body)
+    const {status, data} = response;
     if(status){
-      console.log("sch",response.schedule_interview)
-      // setschduleInterview(response.schedule_interview)
+      console.log("data data",data)
+      setData(data)
+      toggleLoader(false)
     }    
   }
   return (
@@ -49,55 +53,13 @@ const Reschedule = ({navigation}) => {
       <StatusBarLight />
       <HeaderDark onPress={() => navigation.goBack()} title={'Reschedule'} />
       <View>
-        <SafeAreaView style={styles.subBox}>
-          <View style={{flexDirection: 'row'}}>
-            <Image
-              style={{
-                width: 50,
-                height: 50,
-                marginLeft: 10,
-                marginTop: 15,
-              }}
-              source={require('../images/images.png')}
-            />
-            <View>
-              <Text style={styles.inText}>Ram Construction</Text>
-              <Text style={styles.insubText}>Washington, United States</Text>
-            </View>
-            <Image
-              style={{
-                width: 16,
-                height: 16,
-                marginLeft: 'auto',
-                marginTop: 15,
-                marginHorizontal: 15,
-              }}
-              source={require('../images/star.png')}
-            />
-          </View>
-          <View style={styles.Line} />
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.redText}>26 Dec 2021, 1:30 PM</Text>
-            <View
-              style={{
-                width: '30%',
-                marginTop: 10,
-                marginLeft: 'auto',
-              }}>
-              <EndButton
-                bgColor={'lightgrey'}
-                title={'Interview Call'}
-                onPress={() => {}}
-              />
-            </View>
-          </View>
-        </SafeAreaView>
+      {state.isLoading ? <JobList /> : (
         <FlatList
           numColumns={1}
           keyExtractor={item => item.id}
           data={data}
           renderItem={({item, index}) => (
-            <SafeAreaView style={styles.subBox}>
+            <TouchableOpacity style={styles.subBox} onPress={()=>{navigation.navigate('JobDetails', item)}}>
               <View style={{flexDirection: 'row'}}>
                 <Image
                   style={{
@@ -106,11 +68,11 @@ const Reschedule = ({navigation}) => {
                     marginLeft: 10,
                     marginTop: 15,
                   }}
-                  source={item.source}
+                  source={require('../images/Reruiting-agent-slice/images.png')}
                 />
                 <View>
-                  <Text style={styles.inText}>{item.title}</Text>
-                  <Text style={styles.insubText}>{item.subTitle}</Text>
+                  <Text style={styles.inText}>{item.post_job_name}</Text>
+                  <Text style={styles.insubText}>{item.post_job_location}</Text>
                 </View>
                 <Image
                   style={{
@@ -125,19 +87,21 @@ const Reschedule = ({navigation}) => {
               </View>
               <View style={styles.Line} />
               <View style={{flexDirection: 'row'}}>
-                <Text style={styles.redText}>26 Dec 2021, 1:30 PM</Text>
+                <Text style={styles.redText}>{item.interview_call}</Text>
                 <View
                   style={{
                     width: '30%',
                     marginTop: 10,
                     marginLeft: 'auto',
                   }}>
-                  <EndButton title={'Interview Call'} onPress={() => {}} />
+                  <DisableButton title={'Interview Call'} bgColor={'#cccccc'}
+                    txtcolor={'#fff'} onPress={() => {}} />
                 </View>
               </View>
-            </SafeAreaView>
+            </TouchableOpacity>
           )}
         />
+        )}
       </View>
     </View>
   );

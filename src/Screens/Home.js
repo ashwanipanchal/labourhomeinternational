@@ -62,6 +62,12 @@ const Home = ({ navigation, routes }) => {
     getProfile()
   }, [isFocused]);
 
+  
+  // const netinfo = NetInfo.fetch().then(state => {
+  //   console.log("Connection type", state.type);
+  //   console.log("Is connected?", state.isConnected);
+  // });
+
   const newSchData = schduleInterview.map((i)=>{
     const d = new Date(i.schedule_date)
     const t = new Date(`${i.schedule_date} ${i.schedule_time}`)
@@ -113,6 +119,7 @@ const Home = ({ navigation, routes }) => {
 
   }
 
+
   return (
     <SafeAreaView style={{ backgroundColor: '#FFFFFF', flex: 1, }}>
       <StatusBarLight />
@@ -152,7 +159,8 @@ const Home = ({ navigation, routes }) => {
         />
       </View> */}
       {/* {state.isLoading ? <HomeList/>: ( */}
-      <>
+
+        <>
         <View style={{ marginHorizontal: 20, marginTop: -90 }}>
           <ImageBackground imageStyle={{ borderRadius: 20, resizeMode: 'contain' }} style={{ width: '100%', height: 250, }} source={require('../images/card-bg.png')}>
             <View style={{ height: 'auto', flexDirection: 'row', justifyContent: 'space-between', position: 'absolute' }}>
@@ -164,7 +172,7 @@ const Home = ({ navigation, routes }) => {
                   <Text style={{ fontSize: 16, color: '#fff', fontFamily: 'Muli-SemiBold', alignSelf: 'flex-end' }}>English, Hindi</Text>
                   <Text style={{ fontSize: 16, color: '#fff', fontFamily: 'Muli-SemiBold', alignSelf: 'flex-end' }}>Developer</Text>
                 </View>
-                <View style={{ justifyContent: 'flex-end', backgroundColor: 'purple', width: '100%' }}>
+                <View style={{ justifyContent: 'flex-end', backgroundColor: 'purple', width: '100%' , bottom:0 }}>
                   <Text style={{ fontSize: 16, color: '#fff', fontFamily: 'Muli-SemiBold', alignSelf: 'flex-end' }}>Rohini Sec-24</Text>
                   <Text style={{ fontSize: 22, color: '#fff', fontFamily: 'Muli-Bold', alignSelf: 'flex-end' }}>Delhi-NCR</Text>
                 </View>
@@ -502,6 +510,7 @@ const Home = ({ navigation, routes }) => {
           </View>
         </ScrollView>
       </>
+      
       {/* )
       } */}
 

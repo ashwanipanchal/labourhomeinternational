@@ -90,6 +90,7 @@ const ProjectorHome = ({navigation}) => {
     checkIfUserIsApproved()
   },[])
 
+
   const checkIfUserIsApproved = async() =>{
     
     const ntoken = await LocalStorage.getToken()
@@ -133,7 +134,7 @@ const ProjectorHome = ({navigation}) => {
         break;
 
       case 5:
-        navigation.navigate('ScheduleInterview');
+        navigation.navigate('ScheduleInterview', userProfile);
         break;
 
       case 6:

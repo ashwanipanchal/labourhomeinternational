@@ -207,11 +207,11 @@ const documentSubmit = () => {
       ...interviewDone()
     },
     {
-      ...skillCertificate(),
-      imageUrl: require('../images/Reruiting-agent-slice/skill.png'),
+      ...statusApprove()
     },
     {
-      ...statusApprove()
+      ...skillCertificate(),
+      imageUrl: require('../images/Reruiting-agent-slice/skill.png'),
     },
     {
       ...certificateVerified()

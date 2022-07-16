@@ -151,7 +151,7 @@ const APPLY = () => {
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <Loader status={state.isLoading} />
       <ScrollView>
-        {/* <View style={styles.box}>
+        <View style={styles.box}>
           <View style={{flexDirection: 'row'}}>
             <Image
               style={styles.image}
@@ -211,7 +211,7 @@ const APPLY = () => {
                 fontSize={12}
                 bgColor={'#00C327'}
                 txtcolor={'#fff'}
-                onPress={() => {approveUser()}}
+                onPress={() => {}}
               />
             </View>
             <View style={{width: '35%'}}>
@@ -224,7 +224,7 @@ const APPLY = () => {
               />
             </View>
           </View>
-        </View> */}
+        </View>
 
         {/* <FlatList
           numColumns={1}
@@ -266,7 +266,7 @@ const APPLY = () => {
                 />
                 <Text style={styles.user3Text}>{item.user_mobile}</Text>
               </View>
-              {/* <View style={{width: '50%', marginLeft: 55, marginTop: 10}}>
+               <View style={{width: '50%', marginLeft: 55, marginTop: 10}}>
                 <EndButton
                   title={'Schedule Interview'}
                   height={30}
@@ -277,8 +277,8 @@ const APPLY = () => {
                     navigation.navigate('Subscription');
                   }}
                 />
-              </View> */}
-        {/* <View
+              </View> 
+         <View
                 style={{
                   flexDirection: 'row',
                   alignSelf: 'center',
@@ -307,9 +307,9 @@ const APPLY = () => {
                   />
                 </View>
               </View>
-            </View> */}
-        {/* )} */}
-        {/* /> */}
+            </View> 
+        )} 
+         /> */}
 
         <FlatList
           numColumns={1}

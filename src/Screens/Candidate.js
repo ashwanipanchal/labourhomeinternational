@@ -19,6 +19,7 @@ import { Api, LocalStorage } from '../services/Api';
 import {Header, HeaderDark} from '../Custom/CustomView';
 import Loader from '../services/Loader';
 import JobList from '../Custom/JobList';
+import moment from 'moment';
 const {height} = Dimensions.get('window');
 
 const Candidate = ({navigation, route}) => {
@@ -32,6 +33,7 @@ const Candidate = ({navigation, route}) => {
   const toggleLoader = isLoading => setState({ ...state, isLoading })
   useEffect(()=>{
     getPostedJobList()
+    
   },[])
 
   const getPostedJobList = async() =>{
@@ -42,14 +44,26 @@ const Candidate = ({navigation, route}) => {
       'user_id': home.id,
       'user_type': home.user_type
     }
-    console.log("checking body", body)
+    // console.log("checking body", body)
     toggleLoader(true)
     const response = await Api.postedJobList(body)
     toggleLoader(false)
-    console.log(response)
+    // console.log(response.data)
     setData(response.data)
   }
+  // alert(JSON.stringify(data),null,2)
 
+  // const newSchData = data.map((i)=>{
+  //   const tt = i.post_job_date.split(" ")
+  //   return tt[0]
+  //   // const d = new Date(i.schedule_date)
+  //   // const t = new Date(`${i.schedule_date} ${i.schedule_time}`)
+  //   // const dateFormatted = moment(d).format("DD MMM YYYY")
+  //   // const timeFormatted = moment(t).format("hh:mmA")
+  //   // return {...i, dateFormatted, timeFormatted}
+  // })
+
+  // console.log(newSchData)
   return (
     <View style={{backgroundColor: '#f8f8f8', flex: 1}}>
       <StatusBarLight />
@@ -101,14 +115,14 @@ const Candidate = ({navigation, route}) => {
                   />
                 </View>
                 <Text style={styles.middleText}>
-                  {/* Hard Hat, Mason, Brick Layer, Maker…{' '} */}
+                  {item.job_description}
                 </Text>
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <Text style={styles.redText}>{item.year}</Text>
+                  <Text style={styles.redText}>{item.work_exp}</Text>
                   <Text style={styles.redText}>{item.post_job_date}</Text>
                 </View>
               </TouchableOpacity>

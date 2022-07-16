@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import {StatusBarLight} from '../Custom/CustomStatusBar';
 import {Header, HeaderDark} from '../Custom/CustomView';
-import {LocalStorage} from '../services/Api';
+import {Api, LocalStorage} from '../services/Api';
 const {height} = Dimensions.get('window');
 
 const ShortList = ({navigation}) => {
@@ -27,21 +27,11 @@ const ShortList = ({navigation}) => {
   },[]))
 
   const shortList = async() => {
-    const token = (await LocalStorage.getToken()) || '';
-    const btoken = `Bearer ${token}`
-    const response = await fetch('http://139.59.67.166/Labour-Home-Job/public/api/job_shortlist_list',{
-      method:"GET",
-      headers:{
-        "Accept" : "application/json",
-        "Content-Type": "application/json",
-        "x-api-key" : "e2cfe1ebab87981db56aa5aea4448701",
-        "Authorization" : btoken
-      },
-    })
-    const resposeAfterAddToShortList = await response.json()
-    console.log("onShortlist page",resposeAfterAddToShortList)
-    // alert(JSON.stringify(resposeAfterAddToShortList))
-    setData(resposeAfterAddToShortList.data)
+    const response = await Api.shortListPage()
+    const {status, data} = response;
+    if(status){
+      setData(data)
+    }
   }
 
   return (

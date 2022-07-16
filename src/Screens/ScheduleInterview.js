@@ -17,11 +17,16 @@ import {
 } from 'react-native';
 import {StatusBarLight} from '../Custom/CustomStatusBar';
 import AppHeader from '../Custom/CustomAppHeader';
-import {Header, HeaderDark, MainView} from '../Custom/CustomView';
+import { Api } from '../services/Api';
+import {DisableButton, Header, HeaderDark, MainView} from '../Custom/CustomView';
 import {BottomView, EndButton, HeaderLight} from '../Custom/CustomView';
+import JobList from '../Custom/JobList';
 const {height} = Dimensions.get('window');
 
-const ScheduleInterview = ({navigation}) => {
+const ScheduleInterview = ({navigation, route}) => {
+  const [state, setState] = useState({
+    isLoading: false
+  })
   const [data, setData] = useState([
     {
       id: '1',
@@ -38,6 +43,27 @@ const ScheduleInterview = ({navigation}) => {
       source: require('../images/Reruiting-agent-slice/images.png'),
     },
   ]);
+
+  const toggleLoader = isLoading => setState({ ...state, isLoading })
+  useEffect(()=>{
+    getList()
+  },[])
+
+  const getList = async()=> {
+    toggleLoader(true)
+    const body = {
+      "agency_id" : route.params.id
+    }
+  
+    const response = await Api.scheduleListAgent(body);
+    const {status, data} = response;
+    if(status){
+      console.log("schdule interview list ==== ", data)
+      toggleLoader(false)
+      setData(data)
+    }
+  }
+
   return (
     <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
       <StatusBarLight />
@@ -50,9 +76,10 @@ const ScheduleInterview = ({navigation}) => {
         shareOnClick={() => {}}
         share={require('../images/Reruiting-agent-slice/support.png')}
       />
+      {state.isLoading ? <JobList /> : (
       <ScrollView>
         <View>
-          <SafeAreaView style={styles.subBox}>
+          {/* <SafeAreaView style={styles.subBox}>
             <View style={{flexDirection: 'row'}}>
               <Image
                 style={{
@@ -113,13 +140,13 @@ const ScheduleInterview = ({navigation}) => {
                 />
               </View>
             </View>
-          </SafeAreaView>
+          </SafeAreaView> */}
           <FlatList
             numColumns={1}
             keyExtractor={item => item.id}
             data={data}
             renderItem={({item, index}) => (
-              <SafeAreaView style={styles.subBox}>
+              <View style={styles.subBox}>
                 <View style={{flexDirection: 'row'}}>
                   <Image
                     style={{
@@ -128,12 +155,12 @@ const ScheduleInterview = ({navigation}) => {
                       marginLeft: 10,
                       marginTop: 15,
                     }}
-                    source={item.source}
+                    source={require('../images/Reruiting-agent-slice/images.png')}
                   />
                   <View>
-                    <Text style={styles.inText}>{item.name}</Text>
-                    <Text style={styles.insubText}>{item.title}</Text>
-                    <Text style={styles.insubText}>{item.subTitle}</Text>
+                    <Text style={styles.inText}>{item.post_job_name}</Text>
+                    <Text style={styles.insubText}>{item.post_job_location}</Text>
+                    <Text style={styles.insubText}>RA Name : {item.agent_name}</Text>
                   </View>
                   <Image
                     style={{
@@ -162,10 +189,10 @@ const ScheduleInterview = ({navigation}) => {
                     source={require('../images/Reruiting-agent-slice/user.png')}
                   />
                   <View>
-                    <Text style={styles.inText}>Gourav Sharma</Text>
-                    <Text style={styles.redText}>20 Dec 2021, 2:30 PM</Text>
+                    <Text style={styles.inText}>{item.user_name}</Text>
+                    <Text style={styles.redText}>{item.interview_call}</Text>
                   </View>
-                  <View
+                  {/* <View
                     style={{
                       width: '30%',
                       marginTop: 25,
@@ -174,16 +201,34 @@ const ScheduleInterview = ({navigation}) => {
                     <EndButton
                       title={'Interview Call'}
                       onPress={() => {
-                        navigation.navigate('CandidateApplied');
+                        // navigation.navigate('CandidateApplied');
                       }}
                     />
-                  </View>
+                  </View> */}
+                  {item.schedule_interview === "1" ? (
+                      <View
+                        style={{
+                          width: '30%',
+                          marginTop: 25,
+                          marginLeft: 'auto',
+                        }}>
+                        <EndButton title={'Interview Call'} onPress={() => { }} />
+                      </View>
+                    ) : (<View
+                    style={{
+                      width: '30%',
+                      marginTop: 25,
+                      marginLeft: 'auto',
+                    }}>
+                    <DisableButton title={'Interview Call'} onPress={() => { }} />
+                  </View>)}
                 </View>
-              </SafeAreaView>
+              </View>
             )}
           />
         </View>
       </ScrollView>
+      )}
     </View>
   );
 };
